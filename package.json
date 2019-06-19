@@ -1,0 +1,19 @@
+{
+  "name": "todalindah",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.html",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/taranttini/todalindah.git"
+  },
+  "author": "Tarantini Pereira",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/taranttini/todalindah/issues"
+  },
+  "homepage": "https://github.com/taranttini/todalindah#readme"
+}

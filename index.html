@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Beta Demo</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <link rel="stylesheet" href="https://unpkg.com/material-components-web@latest/dist/material-components-web.min.css">    
+
+<style>
+.demo-card{
+    margin:0 auto;
+}
+.w100{
+    width:100%;
+}
+#xCard {
+    position:relative;
+    margin:0 auto;
+    width:400px;
+    height:500px;
+}
+
+.slide {
+  width: 350px;
+  margin: 0px auto;
+  height: 480px;
+  font-size: 0;
+  scroll-snap-type: mandatory;
+}
+
+.slide--horizontal {
+  overflow-y: hidden;
+  overflow-x: scroll;
+  scroll-snap-points-x: repeat(100%);
+  white-space: nowrap;
+}
+
+.item {
+  position: relative;
+  display: inline-block;
+  width: 100%;
+  height: 100%;
+}
+
+#aareaColor {width:400px;}
+.color{width:100px;height:100px;float:left;cursor: pointer;}
+.color .area{width:100px;height:100px;}
+.color .area:hover{background: rgba(255,255,255,.2);
+box-shadow:inset 0 0 1px 8px #6200ee;}
+.tc{text-align: center}
+
+@media (max-width: 400px) {
+    .slide,#xCard {width: 95%;}
+    
+}
+
+    </style>
+</head>
+<body>
+    <h1  class="mdc-typography mdc-typography--headline2 tc">Beta Demo</h1>
+    <div id="xCard">
+        <div id="bodyChoose">
+            <h1 class="mdc-typography mdc-typography--headline4 tc">Selecione o formato do corpo</h1>
+            <div id="areaCard" class="slide slide--horizontal"></div>
+        </div>
+        <div id="skinChoose" style="display: none">
+            <h1 class="mdc-typography mdc-typography--headline4 tc">Selecione a cor da pele</h1>
+            <div id="areaColor"></div>
+        </div>
+        <div id="answer" style="display: none">
+            <div>
+                <h1 id="bodyText" class="mdc-typography mdc-typography--headline4 tc"></h1>
+                <h2 id="skinText" class="mdc-typography mdc-typography--headline3 tc"></h2>
+                <div id="reset" class="mdc-card__action-buttons w100">
+                    <button class="mdc-button mdc-button--raised w100 mdc-card__action mdc-card__action--button">Reset</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+<script>
+let template = (imgUrl, title) => {
+    return `
+<div class="mdc-card demo-card" data-title="${title}">
+    <div class="mdc-card__primary-action demo-card__primary-action" tabindex="0">
+      <div class="mdc-card__media mdc-card__media--16-9 demo-card__media" style="background-image: url('${imgUrl}');height:400px"></div>
+      <!--<div class="demo-card__primary">
+        <h2 class="demo-card__title mdc-typography mdc-typography--headline6">${title}</h2>>
+      </div>-->
+    </div>
+    <div class="mdc-card__actions">
+      <div class="mdc-card__action-buttons w100">
+        <button class="mdc-button mdc-button--raised w100 mdc-card__action mdc-card__action--button">${title}</button>
+      </div>
+      <!--<div class="mdc-card__action-icons">
+        <button class="mdc-button mdc-card__action mdc-card__action--button">SIM</button>
+      </div>-->
+    </div>
+  </div>
+`;
+}
+
+const dataList = [
+  {imgUrl: "oval.png", title:"Oval"},{imgUrl: "triangulo.png", title:"Triangulo"},
+  {imgUrl: "retangulo.png", title:"Retangulo"},{imgUrl: "triangulo_invertido.png", title:"Triangulo Invertido"},
+  {imgUrl: "ampulheta.png", title:"Ampulheta"}
+];
+
+const colors = ["#93614A", "#30150E", "#653618", "#56220D",
+"#38160A","#3D1307","#582812","#672614",
+"#FFC190","#EF9F7E","#E6A680","#F4A481",
+"#E9B995","#DFB175","#FFCCA4","#DFBAA8"]
+
+const bodyChoose = document.querySelector('#bodyChoose');
+const skinChoose = document.querySelector('#skinChoose');
+const answer = document.querySelector('#answer');
+const bodyText = document.querySelector('#bodyText');
+const skinText = document.querySelector('#skinText');
+const reset = document.querySelector('#reset');
+
+const areaCard = document.querySelector('#areaCard');
+let areaColor = document.querySelector('#areaColor');
+
+const bodySelect = function(e, value) {
+    e.preventDefault();
+    bodyText.innerText = value;
+    bodyChoose.style.display='none';
+    skinChoose.style.display='block';
+    answer.style.display='none';
+}
+const colorSelect = function(e,value) {
+    e.preventDefault();
+    skinText.innerText = value;
+    bodyChoose.style.display='none';
+    skinChoose.style.display='none';
+    answer.style.display='block';
+}
+
+const resetSelect = function(e) {
+    e.preventDefault();
+    skinText.innerText = '';
+    bodyText.innerText = '';
+    bodyChoose.style.display='block';
+    skinChoose.style.display='none';
+    answer.style.display='none';
+}
+
+reset.addEventListener('click',resetSelect);
+
+for(data of dataList) {
+    console.log(data)
+    let el = document.createElement('div');
+    el.className="item "
+    el.innerHTML = template(data.imgUrl, data.title);
+    let value = data.title;
+    el.querySelector('.mdc-card__media').addEventListener('click',(event)=>{bodySelect(event,value)})
+    el.querySelector('.mdc-button').addEventListener('click',(event)=>{bodySelect(event,value)})
+    areaCard.appendChild(el)
+}
+
+for(color of colors) {
+    let el = document.createElement('div');
+    el.className="color";
+    el.style.backgroundColor = color;
+    //el.innerHTML=color;
+    el.innerHTML="<div class='area'></div>"
+    let value = color;
+    el.addEventListener('click', (event)=>{colorSelect(event,value)})
+    areaColor.appendChild(el)
+}
+
+</script>
+</body>
+</html>
+
+
+
